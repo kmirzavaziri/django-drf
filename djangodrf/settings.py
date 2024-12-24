@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # 3rd-parties
     "debug_toolbar",
+    "rest_framework",
     # service applications
     "polls.apps.PollsConfig",
 ]
@@ -131,3 +132,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+}

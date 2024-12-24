@@ -1,0 +1,31 @@
+envs:
+  local:
+    variables:
+      base_url: http://127.0.0.1:8000/api/v1
+
+users:
+  auth:
+    token:
+      url: '{base_url}/users/auth/token/'
+      method: post
+      json:
+        username: kamyar
+        password: 1
+      post_response:
+        store:
+          - from: access
+            to: access_token
+          - from: refresh
+            to: refresh_token
+  users:
+    list:
+      url: '{base_url}/users/users/'
+      method: get
+      headers:
+        Authorization: 'Bearer {storage.access_token}'
+  groups:
+    list:
+      url: '{base_url}/users/groups/'
+      method: get
+      headers:
+        Authorization: 'Bearer {storage.access_token}'

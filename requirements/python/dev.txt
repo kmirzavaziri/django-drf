@@ -3,3 +3,4 @@
 pre-commit~=4.0.1
 ipython~=8.18.1
 django-debug-toolbar~=4.4.6
+requests~=2.32.3

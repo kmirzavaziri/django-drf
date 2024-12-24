@@ -25,3 +25,14 @@ pre-commit-install: dev-deps
 .PHONY: test
 test: test-deps
 	python manage.py test polls
+
+.PHONY: up
+up:
+	./manage.py runserver
+
+.PHONY: request
+request: dev-deps
+	cd minipostman && python main.py $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+
+%:
+	@:
