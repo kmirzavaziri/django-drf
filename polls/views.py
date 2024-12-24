@@ -1,23 +1,39 @@
-from django.http import HttpResponse
+from django.db.models import F
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
+from django.views import View, generic
 
-from polls.models import Question
-
-
-def index(request):
-    latest_question_list = Question.objects.order_by("-pub_date")[:5]
-    return render(request, "polls/index.html", {"latest_question_list": latest_question_list})
+from polls.models import Choice, Question
 
 
-def detail(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, "polls/detail.html", {"question": question})
+class IndexView(generic.ListView):
+    template_name = "polls/index.html"
+    context_object_name = "questions"
+
+    def get_queryset(self):
+        return Question.objects.order_by("-pub_date")[:5]
 
 
-def results(request, question_id):
-    response = "You're looking at the results of question %s."
-    return HttpResponse(response % question_id)
+class DetailView(View):
+    def get(self, request, question_id):
+        question = get_object_or_404(Question, pk=question_id)
+        return render(request, "polls/detail.html", {"question": question})
 
-
-def vote(request, question_id):
-    return HttpResponse("You're voting on question %s." % question_id)
+    def post(self, request, question_id):
+        question = get_object_or_404(Question, pk=question_id)
+        try:
+            selected_choice = question.choice_set.get(pk=request.POST["choice"])
+        except (KeyError, Choice.DoesNotExist):
+            return render(
+                request,
+                "polls/detail.html",
+                {
+                    "question": question,
+                    "error_message": "Please select a choice first.",
+                },
+            )
+        else:
+            selected_choice.votes = F("votes") + 1
+            selected_choice.save()
+            return HttpResponseRedirect(reverse("polls:detail", args=(question.id,)))

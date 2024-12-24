@@ -11,9 +11,9 @@
 <div class="wrapper">
     <div class="card">
         <h1>Latest Question List</h1>
-        {% if latest_question_list %}
+        {% if questions %}
         <ul>
-            {% for question in latest_question_list %}
+            {% for question in questions %}
             <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
             {% endfor %}
         </ul>

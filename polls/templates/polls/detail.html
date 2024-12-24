@@ -10,12 +10,34 @@
 <body>
 <div class="wrapper">
     <div class="card">
-        <h1>{{ question.question_text }}</h1>
-        <ul>
-            {% for choice in question.choice_set.all %}
-            <li>{{ choice.choice_text }}</li>
-            {% endfor %}
-        </ul>
+        <form action="{% url 'polls:detail' question.id %}" method="post">
+            {% csrf_token %}
+            <fieldset>
+                <legend><h1>{{ question.question_text }}</h1></legend>
+                {% if error_message %}
+                <p class="err"><strong>{{ error_message }}</strong></p>
+                {% endif %}
+
+                <table>
+                    <tr>
+                        <th>Choice</th>
+                        <th>Votes</th>
+                    </tr>
+                    {% for choice in question.choice_set.all %}
+                    <tr>
+                        <td>
+                            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+                        </td>
+                        <td>{{ choice.votes }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </fieldset>
+            <input type="submit" value="Vote">
+        </form>
+        <br>
+        <a href="{% url 'polls:index' %}">Back</a>
     </div>
 </div>
 </body>
