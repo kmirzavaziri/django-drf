@@ -2,10 +2,11 @@
 line-length = 120
 exclude = '''
 /(
-    \.venv
+    \.venv|
+    migrations
 )/
 '''
 
 [tool.isort]
 profile = "black"
-skip = [".venv"]
+skip = [".venv", "migrations"]
