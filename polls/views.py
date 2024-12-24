@@ -4,8 +4,10 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views import View, generic
+from rest_framework import permissions, viewsets
 
 from polls.models import Choice, Question
+from polls.serializers import ChoiceSerializer, QuestionSerializer
 
 
 class IndexView(generic.ListView):
@@ -41,3 +43,15 @@ class DetailView(View):
 
     def get_queryset(self):
         return Question.objects.filter(pub_date__lte=timezone.now())
+
+
+class QuestionViewSet(viewsets.ModelViewSet):
+    queryset = Question.objects.all().order_by("-pub_date")
+    serializer_class = QuestionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class ChoiceViewSet(viewsets.ModelViewSet):
+    queryset = Choice.objects.all()
+    serializer_class = ChoiceSerializer
+    permission_classes = [permissions.IsAuthenticated]
