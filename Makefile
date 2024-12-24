@@ -21,3 +21,7 @@ format: test-deps
 .PHONY: pre-commit-install
 pre-commit-install: dev-deps
 	pre-commit install
+
+.PHONY: test
+test: test-deps
+	python manage.py test polls
